@@ -26,46 +26,78 @@
 */
 
 // constants won't change. They're used here to set pin numbers:
-const int buttonPin = 2;     // the number of the pushbutton pin
-const int ledPin =  7;      // the number of the LED pin
+const int GREEN =  7;      // the number of the LED pin
+const int YELLOW = 6;
+const int RED = 5;
 const int RECV_PIN = 13;
 
-
+// variables will change:
 IRrecv receiver(RECV_PIN);
 decode_results results;
-
-// variables will change:
-int buttonState = 0;         // variable for reading the pushbutton status
-
-
+int activeLed = GREEN;         // variable for reading the pushbutton status
+int state = 0x00000000;
 
 void setup() {
   Serial.begin(9600);
   receiver.enableIRIn();
 
   // initialize the LED pin as an output:
-  pinMode(ledPin, OUTPUT);
-  // initialize the pushbutton pin as an input:
-  pinMode(buttonPin, INPUT);
+  pinMode(GREEN, OUTPUT);
+  pinMode(YELLOW, OUTPUT);
+  pinMode(RED, OUTPUT);
 }
 
+int revert(int state) {
+  if(state == HIGH) {
+    return LOW;
+  }
+  return HIGH;
+}
+
+void blinkFrom(int state) {
+  digitalWrite(activeLed, revert(state));
+  delay(100);
+  digitalWrite(activeLed, state);
+  delay(1000);
+}
 
 void handleIr(int value) {
   switch (value) {
+    case IR_1:
+      activeLed = GREEN;
+      break;
+    case IR_2:
+      activeLed = YELLOW;
+      break;
+    case IR_3:
+      activeLed = RED;
+      break;
+    case IR_EQ:
+      if (bitRead(state, activeLed) == 0) {
+        blinkFrom(LOW);
+      } else {
+        blinkFrom(HIGH);
+      }
+      digitalWrite(activeLed, HIGH);
+      delay(100);
+      digitalWrite(activeLed, LOW);
+      break;
     case IR_PLUS:
-      digitalWrite(ledPin, HIGH);
+      digitalWrite(activeLed, HIGH);
+      bitWrite(state, activeLed, 1);
       break;
     case IR_MINUS:
-      digitalWrite(ledPin, LOW);
+      digitalWrite(activeLed, LOW);
+      bitWrite(state, activeLed, 0);
       break;
   }
 }
 
 void loop() {
   if (receiver.decode(&results)) {
+    // Debug
     Serial.println(results.value, HEX);
     handleIr(results.value);
     receiver.resume();
   }
-  
 }
