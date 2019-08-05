@@ -48,47 +48,53 @@ void setup() {
 }
 
 int revert(int state) {
-  if(state == HIGH) {
+  if (state == HIGH) {
     return LOW;
   }
   return HIGH;
 }
 
-void blinkFrom(int state) {
-  digitalWrite(activeLed, revert(state));
+void blinkLed(int pin) {
+  digitalWrite(pin, revert(state));
   delay(100);
-  digitalWrite(activeLed, state);
-  delay(1000);
+  digitalWrite(pin, state);
+}
+
+void led(int pin, int value) {
+  bitWrite(state, pin, value == HIGH ? 1 : 0);
+  Serial.print("STATE: ");
+  Serial.println(state, BIN);
+  digitalWrite(pin, value);
 }
 
 void handleIr(int value) {
   switch (value) {
     case IR_1:
-      activeLed = GREEN;
+      led(GREEN, HIGH);
       break;
     case IR_2:
-      activeLed = YELLOW;
+      led(YELLOW, HIGH);
       break;
     case IR_3:
-      activeLed = RED;
+      led(RED, HIGH);
       break;
-    case IR_EQ:
-      if (bitRead(state, activeLed) == 0) {
-        blinkFrom(LOW);
-      } else {
-        blinkFrom(HIGH);
-      }
-      digitalWrite(activeLed, HIGH);
-      delay(100);
-      digitalWrite(activeLed, LOW);
+    case IR_4:
+      led(GREEN, LOW);
       break;
-    case IR_PLUS:
-      digitalWrite(activeLed, HIGH);
-      bitWrite(state, activeLed, 1);
+    case IR_5:
+      led(YELLOW, LOW);
       break;
-    case IR_MINUS:
-      digitalWrite(activeLed, LOW);
-      bitWrite(state, activeLed, 0);
+    case IR_6:
+      led(RED, LOW);
+      break;
+    case IR_7:
+      blinkLed(GREEN);
+      break;
+    case IR_8:
+      blinkLed(YELLOW);
+      break;
+    case IR_9:
+      blinkLed(RED);
       break;
   }
 }
