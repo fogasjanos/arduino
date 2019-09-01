@@ -2,7 +2,8 @@
 // 9V + Vin, - Ground   G, Y, R
 const int LIGHTS[] = {7, 6, 5, 4, 3, 2};
 const int LIGHTS_LEN = 3;
-const int STATES_COUNT = 18;
+const int STATES_COUNT = 32;
+
 const int STATES[][3] = {
   {HIGH, LOW, LOW},
   {HIGH, LOW, LOW},
@@ -10,10 +11,25 @@ const int STATES[][3] = {
   {HIGH, LOW, LOW},
   {HIGH, LOW, LOW},
   {HIGH, LOW, LOW},
+  {HIGH, LOW, LOW},
+  {HIGH, LOW, LOW},
+  {HIGH, LOW, LOW},
+  {HIGH, LOW, LOW},
+  {HIGH, LOW, LOW},
   {LOW, HIGH, LOW},
   {LOW, HIGH, LOW},
+  {LOW, HIGH, LOW},
+
+  {LOW, LOW, HIGH},
   {LOW, LOW, HIGH},
 
+  {LOW, LOW, HIGH},
+  {LOW, LOW, HIGH},
+  {LOW, LOW, HIGH},
+  {LOW, LOW, HIGH},
+  {LOW, LOW, HIGH},
+  {LOW, LOW, HIGH},
+  {LOW, LOW, HIGH},
   {LOW, LOW, HIGH},
   {LOW, LOW, HIGH},
   {LOW, LOW, HIGH},
@@ -39,7 +55,7 @@ void setup() {
   }
 }
 int state = 0;
-int ledStates[] = {0, 9};
+int ledStates[] = {0, (STATES_COUNT / 2)};
 void loop() {
   unsigned long currentMillis = millis();
 
@@ -58,6 +74,6 @@ void handleStateFrom(int index) {
 
   for (int i = 0; i < LIGHTS_LEN; i++) {
     int state = ledStates[index];
-    digitalWrite(LIGHTS[i + (LIGHTS_LEN*index)], STATES[state][i]);
+    digitalWrite(LIGHTS[i + (LIGHTS_LEN * index)], STATES[state][i]);
   }
 }
