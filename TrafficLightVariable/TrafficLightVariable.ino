@@ -3,9 +3,12 @@
 const int LIGHTS[] = {7, 6, 5, 4, 3, 2};
 const int LIGHTS_LEN = 3;
 const int STATES_COUNT = 32;
-const int STATES_CONST = { LOW, HIGH };
+const int STATES_CONST[] = { LOW, HIGH };
 
-const int STATES[][3] = {
+const int LONG_STATES[][3] = {
+  {1, 0, 0},
+  {1, 0, 0},
+  {1, 0, 0},
   {1, 0, 0},
   {1, 0, 0},
   {1, 0, 0},
@@ -20,15 +23,6 @@ const int STATES[][3] = {
   {0, 1, 0},
   {0, 1, 0},
   {0, 1, 0},
-
-  {0, 0, 1},
-  {0, 0, 1},
-
-  {0, 0, 1},
-  {0, 0, 1},
-  {0, 0, 1},
-  {0, 0, 1},
-  {0, 0, 1},
   {0, 0, 1},
   {0, 0, 1},
   {0, 0, 1},
@@ -40,6 +34,39 @@ const int STATES[][3] = {
   {0, 0, 1},
   {0, 0, 1},
   {0, 1, 1}
+};
+
+const int SHORT_STATES[][3] = {
+  {0, 0, 1},
+  {0, 0, 1},
+  {0, 0, 1},
+  {0, 0, 1},
+  {0, 0, 1},
+  {0, 0, 1},
+  {0, 0, 1},
+  {0, 0, 1},
+  {0, 0, 1},
+  {0, 0, 1},
+  {0, 0, 1},
+  {0, 0, 1},
+  {0, 0, 1},
+  {0, 0, 1},
+  
+  {0, 0, 1},
+  {0, 0, 1},
+  {0, 1, 1},
+  
+  {1, 0, 0},
+  {1, 0, 0},
+  {1, 0, 0},
+  {1, 0, 0},
+  {1, 0, 0},
+  {1, 0, 0},
+  {1, 0, 0},
+  {1, 0, 0},
+  {0, 1, 0},
+  {0, 1, 0},
+  {0, 1, 0}
 };
 
 // Generally, you should use "unsigned long" for variables that hold time
@@ -56,26 +83,33 @@ void setup() {
   }
 }
 int state = 0;
-int ledStates[] = {0, (STATES_COUNT / 2)};
+int ledStates[] = {0, 0};
 void loop() {
   unsigned long currentMillis = millis();
 
   if (currentMillis - previousMillis >= INTERVAL) {
-    // save the last time you blinked the LED
     previousMillis = currentMillis;
-    handleStateFrom(0);
-    handleStateFrom(1);
+    handleLongState();
+    handleShortState();
   }
 }
 
-void handleStateFrom(int index) {
+void handleLongState() {
+  handleStateFrom(0, LONG_STATES);
+}
+
+void handleShortState() {
+  handleStateFrom(1, SHORT_STATES);
+}
+
+void handleStateFrom(int index, int statesArray[][3]) {
   if (++ledStates[index] == STATES_COUNT) {
     ledStates[index] = 0;
   }
 
   for (int i = 0; i < LIGHTS_LEN; i++) {
     int state = ledStates[index];
-    int valueIndex = STATES[state][i];
+    int valueIndex = statesArray[state][i];
     digitalWrite(LIGHTS[i + (LIGHTS_LEN * index)], STATES_CONST[valueIndex]);
   }
 }
