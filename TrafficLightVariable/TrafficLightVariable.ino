@@ -1,8 +1,10 @@
+// BOARD: Atmel atmega328p Xplained mini
+
 
 // 9V + Vin, - Ground   G, Y, R
 const int LIGHTS[] = {7, 6, 5, 4, 3, 2};
 const int LIGHTS_LEN = 3;
-const int STATES_COUNT = 32;
+const int STATES_COUNT = 25;
 const int STATES_CONST[] = { LOW, HIGH };
 
 const int LONG_STATES[][3] = {
@@ -18,11 +20,12 @@ const int LONG_STATES[][3] = {
   {1, 0, 0},
   {1, 0, 0},
   {1, 0, 0},
-  {1, 0, 0},
-  {1, 0, 0},
+
   {0, 1, 0},
   {0, 1, 0},
-  {0, 1, 0},
+  {0, 0, 1},
+  {0, 0, 1},
+
   {0, 0, 1},
   {0, 0, 1},
   {0, 0, 1},
@@ -31,11 +34,9 @@ const int LONG_STATES[][3] = {
   {0, 0, 1},
   {0, 0, 1},
   {0, 0, 1},
-  {0, 0, 1},
-  {0, 0, 1},
+
   {0, 1, 1}
 };
-
 const int SHORT_STATES[][3] = {
   {0, 0, 1},
   {0, 0, 1},
@@ -49,16 +50,12 @@ const int SHORT_STATES[][3] = {
   {0, 0, 1},
   {0, 0, 1},
   {0, 0, 1},
+
   {0, 0, 1},
-  {0, 0, 1},
-  
   {0, 0, 1},
   {0, 0, 1},
   {0, 1, 1},
-  
-  {1, 0, 0},
-  {1, 0, 0},
-  {1, 0, 0},
+
   {1, 0, 0},
   {1, 0, 0},
   {1, 0, 0},
@@ -66,7 +63,9 @@ const int SHORT_STATES[][3] = {
   {1, 0, 0},
   {0, 1, 0},
   {0, 1, 0},
-  {0, 1, 0}
+  {0, 0, 1},
+
+  {0, 0, 1}
 };
 
 // Generally, you should use "unsigned long" for variables that hold time
